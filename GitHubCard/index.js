@@ -18,6 +18,16 @@ console.log(myInfo);
 /* Step 4: Pass the data received from Github into your function, 
            create a new component and add it to the DOM as a child of .cards
 */
+myInfo
+  .then(gitHubData => {
+    const userCard = cardCreator(gitHubData);
+    const cardsContainer = document.querySelector('.cards');
+
+    cardsContainer.appendChild(userCard);
+  })
+  .catch(err => {
+    console.log('ERROR: ', err);
+  });
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -29,7 +39,7 @@ console.log(myInfo);
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['meholt', 'Heather-Ridgill', 'Yaretas', 'sablemadison', 'kroaix'];
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -85,6 +95,7 @@ const cardCreator = userObj => {
           // a link github user address
           const profileLink = document.createElement('a');
           profileLink.href = userObj.data['html_url'];
+          profileLink.textContent = userObj.data['html_url'];
           infoProfile.appendChild(profileLink);
 
       // followers p tag
