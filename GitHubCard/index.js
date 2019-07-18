@@ -3,6 +3,11 @@
            https://api.github.com/users/<your name>
 */
 
+
+const myInfo = axios.get('https://api.github.com/users/MicahJank');
+
+console.log(myInfo);
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -43,8 +48,27 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
+
+const cardCreator = userObj => {
+  const cardDiv = document.createElement('div');
+
+  const cardImg = document.createElement('img');
+  cardImg.src = userObj.data['avatar_url'];
+  cardDiv.appendChild(cardImg);
+
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('card-info');
+
+  const infoName = document.createElement('h3');
+  infoName.classList.add('name');
+  infoName.textContent = userObj.data.name;
+  infoDiv.appendChild(infoName);
+
+  const infoUserName = document.createElement('p');
+  infoUserName.classList.add('username');
+  infoUserName.textContent = userObj.data.login;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
