@@ -53,21 +53,56 @@ const followersArray = [];
 const cardCreator = userObj => {
   const cardDiv = document.createElement('div');
 
-  const cardImg = document.createElement('img');
-  cardImg.src = userObj.data['avatar_url'];
-  cardDiv.appendChild(cardImg);
+    const cardImg = document.createElement('img');
+    cardImg.src = userObj.data['avatar_url'];
+    cardDiv.appendChild(cardImg);
 
-  const infoDiv = document.createElement('div');
-  infoDiv.classList.add('card-info');
+    const infoDiv = document.createElement('div');
+    infoDiv.classList.add('card-info');
+    cardDiv.appendChild(infoDiv);
 
-  const infoName = document.createElement('h3');
-  infoName.classList.add('name');
-  infoName.textContent = userObj.data.name;
-  infoDiv.appendChild(infoName);
+      // persons name p tag
+      const infoName = document.createElement('h3');
+      infoName.classList.add('name');
+      infoName.textContent = userObj.data.name;
+      infoDiv.appendChild(infoName);
 
-  const infoUserName = document.createElement('p');
-  infoUserName.classList.add('username');
-  infoUserName.textContent = userObj.data.login;
+      // user name p tag
+      const infoUserName = document.createElement('p');
+      infoUserName.classList.add('username');
+      infoUserName.textContent = userObj.data.login;
+      infoDiv.appendChild(infoUserName);
+
+      // location p tag
+      const infoLocation = document.createElement('p');
+      infoLocation.textContent = `Location: ${userObj.data.location}`;
+      infoDiv.appendChild(infoLocation);
+
+      // profile p tag
+      const infoProfile = document.createElement('p');
+      infoProfile.textContent = 'Profile: ';
+      infoDiv.appendChild(infoProfile);
+          // a link github user address
+          const profileLink = document.createElement('a');
+          profileLink.href = userObj.data['html_url'];
+          infoProfile.appendChild(profileLink);
+
+      // followers p tag
+      const infoFollowers = document.createElement('p');
+      infoFollowers.textContent = `Followers: ${userObj.data.followers}`;
+      infoDiv.appendChild(infoFollowers);
+
+      // following p tag
+      const infoFollowing = document.createElement('p');
+      infoFollowing.textContent = `Following: ${userObj.data.following}`;
+      infoDiv.appendChild(infoFollowing);
+
+      // bio p tag
+      const infoBio = document.createElement('p');
+      infoBio.textContent = `Bio: ${userObj.data.bio}`;
+      infoDiv.appendChild(infoBio);
+
+  return cardDiv;
 }
 
 /* List of LS Instructors Github username's: 
