@@ -119,37 +119,45 @@ const cardCreator = cardObj => {
   infoBio.textContent = `Bio: ${cardObj.bio}`;
   infoDiv.appendChild(infoBio);
 
-  // function that creates the users repo cards
-  const createRepoCards = (repoObj => {
-    // card structure
-    /*
-      <div class="repo">
-        <p></p>
-        <p></p>
-        <a class="button" href=""></a>
-      </div>
-    */
+  // repos will hold all the repo cards that are created by the createRepoCards function
+  const repos = document.createElement('div');
+  repos.classList.add('repos');
+  cardDiv.appendChild(repos);
 
-    const repoDiv = document.createElement('div');
-    repoDiv.classList.add('repo');
+  // call the createRepoCards here so that we can attach the created repo cards to the current github profile card that
+  // is being created
 
-    const repoName = document.createElement('p');
-    repoName.textContent = repoObj.name;
-    repoDiv.appendChild(repoName);
-
-    const repoDescription = document.createElement('p');
-    repoDescription.textContent = repoObj.description;
-    repoDiv.appendChild(repoDescription);
-
-    const repoLink = document.createElement('a');
-    repoLink.classList.add('button');
-    repoLink.href = repoObj.html_url;
-    repoLink.textContent = 'Go to Repo';
-    repoDiv.appendChild(repoLink);
-
-    return repoDiv;
-  });
 
   return cardDiv;
 }
 
+// function that creates the users repo cards
+const createRepoCards = (repoObj => {
+  // card structure
+  /*
+    <div class="repo">
+      <p></p>
+      <p></p>
+      <a class="button" href=""></a>
+    </div>
+  */
+
+  const repoDiv = document.createElement('div');
+  repoDiv.classList.add('repo');
+
+  const repoName = document.createElement('p');
+  repoName.textContent = repoObj.name;
+  repoDiv.appendChild(repoName);
+
+  const repoDescription = document.createElement('p');
+  repoDescription.textContent = repoObj.description;
+  repoDiv.appendChild(repoDescription);
+
+  const repoLink = document.createElement('a');
+  repoLink.classList.add('button');
+  repoLink.href = repoObj.html_url;
+  repoLink.textContent = 'Go to Repo';
+  repoDiv.appendChild(repoLink);
+
+  return repoDiv;
+});
