@@ -119,12 +119,37 @@ const cardCreator = cardObj => {
   infoBio.textContent = `Bio: ${cardObj.bio}`;
   infoDiv.appendChild(infoBio);
 
- // Call createRepoCards
+  // function that creates the users repo cards
+  const createRepoCards = (repoObj => {
+    // card structure
+    /*
+      <div class="repo">
+        <p></p>
+        <p></p>
+        <a class="button" href=""></a>
+      </div>
+    */
+
+    const repoDiv = document.createElement('div');
+    repoDiv.classList.add('repo');
+
+    const repoName = document.createElement('p');
+    repoName.textContent = repoObj.name;
+    repoDiv.appendChild(repoName);
+
+    const repoDescription = document.createElement('p');
+    repoDescription.textContent = repoObj.description;
+    repoDiv.appendChild(repoDescription);
+
+    const repoLink = document.createElement('a');
+    repoLink.classList.add('button');
+    repoLink.href = repoObj.html_url;
+    repoLink.textContent = 'Go to Repo';
+    repoDiv.appendChild(repoLink);
+
+    return repoDiv;
+  });
 
   return cardDiv;
 }
 
- // function that creates the users repo cards
- const createRepoCards(repoObj => {
-  
- });
