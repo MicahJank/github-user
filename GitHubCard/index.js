@@ -22,17 +22,27 @@ myInfo
     const followers = axios.get(followersURL);
 
     followers
-    .then(followerData => {
-      const followersArray = followerData.data; // an array of objects
-      console.log(followersArray);
-  
-      followersArray.forEach(followerObj => {
-        const followerCard = cardCreator(followerObj);
-        cardsContainer.appendChild(followerCard);
-      });
-    });
-  })
+      .then(followerData => {
+        const followerDataArray = followerData.data; // the array of follower OBJECTS
 
+        const followerUrlArray = followerDataArray.map(follower => { // returns an array of follower URLs
+          return follower.url;
+        });
+
+        return followerUrlArray;
+      })
+      .then(followersUrlArray => {
+        followersUrlArray.forEach(followerURL => {
+         const followerInfoObj = axios.get(followerURL);
+
+         followerInfoObj
+          .then(followerObj => {
+            const followerCard = cardCreator(followerObj.data);
+            cardsContainer.appendChild(followerCard);
+          });
+        });
+      });
+  })
   .catch(err => {
     console.log('ERROR: ', err);
   });
