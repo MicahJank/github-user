@@ -22,12 +22,32 @@ console.log(myInfo);
 */
 myInfo
   .then(gitHubData => {
-    const userCard = cardCreator(gitHubData);
+
+    const userCard = cardCreator(gitHubData.data);
     cardsContainer.appendChild(userCard);
   })
+
+myInfo.then(gitHubData => {
+    const followers = axios.get(gitHubData.data['followers_url']);
+
+    followers
+    .then(followerData => {
+      const followersArray = followerData.data; // an array of objects
+      console.log(followersArray);
+  
+      followersArray.forEach(followerObj => {
+        const followerCard = cardCreator(followerObj);
+        cardsContainer.appendChild(followerCard);
+      });
+    });
+    
+  })
+
   .catch(err => {
     console.log('ERROR: ', err);
   });
+
+
 
 /* Step 5: Now that you have your own card getting added to the DOM, either 
           follow this link in your browser https://api.github.com/users/<Your github name>/followers 
@@ -39,22 +59,9 @@ myInfo
           user, and adding that card to the DOM.
 */
 
-const followersArray = ['meholt', 'Heather-Ridgill', 'Yaretas', 'sablemadison', 'kroaix', '	dmunter2'];
 
 
-followersArray.forEach(follower => {
-  const followerData = axios.get(`https://api.github.com/users/${follower}`);
-
-  followerData
-    .then(gitHubData => {
-      const followerCard = cardCreator(gitHubData);
-      cardsContainer.appendChild(followerCard);
-    })
-    .catch(err => {
-      console.log('ERROR: ', err);
-    });
-
-});
+// const followersArray = ['meholt', 'Heather-Ridgill', 'Yaretas', 'sablemadison', 'kroaix', '	dmunter2'];
 
 
 /* Step 3: Create a function that accepts a single object as its only argument,
@@ -76,58 +83,58 @@ followersArray.forEach(follower => {
 </div>
 */
 
-const cardCreator = userObj => {
+const cardCreator = cardObj => {
   const cardDiv = document.createElement('div');
 
-    const cardImg = document.createElement('img');
-    cardImg.src = userObj.data['avatar_url'];
-    cardDiv.appendChild(cardImg);
+  const cardImg = document.createElement('img');
+  cardImg.src = cardObj['avatar_url'];
+  cardDiv.appendChild(cardImg);
 
-    const infoDiv = document.createElement('div');
-    infoDiv.classList.add('card-info');
-    cardDiv.appendChild(infoDiv);
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('card-info');
+  cardDiv.appendChild(infoDiv);
 
-      // persons name p tag
-      const infoName = document.createElement('h3');
-      infoName.classList.add('name');
-      infoName.textContent = userObj.data.name;
-      infoDiv.appendChild(infoName);
+  // persons name p tag
+  const infoName = document.createElement('h3');
+  infoName.classList.add('name');
+  infoName.textContent = cardObj.name;
+  infoDiv.appendChild(infoName);
 
-      // user name p tag
-      const infoUserName = document.createElement('p');
-      infoUserName.classList.add('username');
-      infoUserName.textContent = userObj.data.login;
-      infoDiv.appendChild(infoUserName);
+  // user name p tag
+  const infoUserName = document.createElement('p');
+  infoUserName.classList.add('username');
+  infoUserName.textContent = cardObj.login;
+  infoDiv.appendChild(infoUserName);
 
-      // location p tag
-      const infoLocation = document.createElement('p');
-      infoLocation.textContent = `Location: ${userObj.data.location}`;
-      infoDiv.appendChild(infoLocation);
+  // location p tag
+  const infoLocation = document.createElement('p');
+  infoLocation.textContent = `Location: ${cardObj.location}`;
+  infoDiv.appendChild(infoLocation);
 
-      // profile p tag
-      const infoProfile = document.createElement('p');
-      infoProfile.textContent = 'Profile: ';
-      infoDiv.appendChild(infoProfile);
-          // a link github user address
-          const profileLink = document.createElement('a');
-          profileLink.href = userObj.data['html_url'];
-          profileLink.textContent = userObj.data['html_url'];
-          infoProfile.appendChild(profileLink);
+  // profile p tag
+  const infoProfile = document.createElement('p');
+  infoProfile.textContent = 'Profile: ';
+  infoDiv.appendChild(infoProfile);
+  // a link github user address
+  const profileLink = document.createElement('a');
+  profileLink.href = cardObj['html_url'];
+  profileLink.textContent = cardObj['html_url'];
+  infoProfile.appendChild(profileLink);
 
-      // followers p tag
-      const infoFollowers = document.createElement('p');
-      infoFollowers.textContent = `Followers: ${userObj.data.followers}`;
-      infoDiv.appendChild(infoFollowers);
+  // followers p tag
+  const infoFollowers = document.createElement('p');
+  infoFollowers.textContent = `Followers: ${cardObj.followers}`;
+  infoDiv.appendChild(infoFollowers);
 
-      // following p tag
-      const infoFollowing = document.createElement('p');
-      infoFollowing.textContent = `Following: ${userObj.data.following}`;
-      infoDiv.appendChild(infoFollowing);
+  // following p tag
+  const infoFollowing = document.createElement('p');
+  infoFollowing.textContent = `Following: ${cardObj.following}`;
+  infoDiv.appendChild(infoFollowing);
 
-      // bio p tag
-      const infoBio = document.createElement('p');
-      infoBio.textContent = `Bio: ${userObj.data.bio}`;
-      infoDiv.appendChild(infoBio);
+  // bio p tag
+  const infoBio = document.createElement('p');
+  infoBio.textContent = `Bio: ${cardObj.bio}`;
+  infoDiv.appendChild(infoBio);
 
   return cardDiv;
 }
