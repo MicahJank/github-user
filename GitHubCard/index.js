@@ -124,12 +124,28 @@ const cardCreator = cardObj => {
   repos.classList.add('repos');
   cardDiv.appendChild(repos);
 
+
+  // use axios.get to return a promise of the repos_url
+  const reposPromise = axios.get(cardObj.repos_url);
+
+  reposPromise
+    .then(reposObj => {
+      reposObj.data.forEach(repo => {
+        const repoCard = createRepoCards(repo);
+        repos.appendChild(repoCard);
+      });
+    })
+
+    .catch(err => {
+      console.log('ERROR: ', err);
+    });
+
   // call the createRepoCards here so that we can attach the created repo cards to the current github profile card that
   // is being created
 
 
   return cardDiv;
-}
+};
 
 // function that creates the users repo cards
 const createRepoCards = (repoObj => {
