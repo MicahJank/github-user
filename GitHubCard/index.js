@@ -1,34 +1,25 @@
-/* Step 1: using axios, send a GET request to the following URL 
-           (replacing the palceholder with your Github name):
-           https://api.github.com/users/<your name>
-*/
 
-
+// myInfo stores the promise from axios.get
 const myInfo = axios.get('https://api.github.com/users/MicahJank');
 
-const cardsContainer = document.querySelector('.cards'); // will be used to append the cards to
-
+// card container is used to store the component that carCreator creates
+const cardsContainer = document.querySelector('.cards');
 console.log(myInfo);
 
-/* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
-
-   Skip to Step 3.
-*/
-
-/* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
+// myInfo = the promise
 myInfo
+// was axios was able to retrieve the data from the API? if so then
   .then(gitHubData => {
-
+    // in order to show the data on screen i run the cardCreator function which returns an element
+    // that element is then appended to the cardsContainer
     const userCard = cardCreator(gitHubData.data);
     cardsContainer.appendChild(userCard);
+
+    return gitHubData.data['followers_url'];
   })
 
-myInfo.then(gitHubData => {
-    const followers = axios.get(gitHubData.data['followers_url']);
+  .then(followersURL => {
+    const followers = axios.get(followersURL);
 
     followers
     .then(followerData => {
@@ -40,33 +31,13 @@ myInfo.then(gitHubData => {
         cardsContainer.appendChild(followerCard);
       });
     });
-    
   })
 
   .catch(err => {
     console.log('ERROR: ', err);
   });
 
-
-
-/* Step 5: Now that you have your own card getting added to the DOM, either 
-          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
-          , manually find some other users' github handles, or use the list found 
-          at the bottom of the page. Get at least 5 different Github usernames and add them as
-          Individual strings to the friendsArray below.
-          
-          Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
-*/
-
-
-
-// const followersArray = ['meholt', 'Heather-Ridgill', 'Yaretas', 'sablemadison', 'kroaix', '	dmunter2'];
-
-
-/* Step 3: Create a function that accepts a single object as its only argument,
-          Using DOM methods and properties, create a component that will return the following DOM element:
-
+/* 
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
@@ -138,11 +109,3 @@ const cardCreator = cardObj => {
 
   return cardDiv;
 }
-
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
