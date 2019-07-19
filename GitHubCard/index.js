@@ -66,9 +66,11 @@ myInfo
 
 const cardCreator = cardObj => {
   const cardDiv = document.createElement('div');
+  cardDiv.classList.add('card');
 
   const cardImg = document.createElement('img');
   cardImg.src = cardObj['avatar_url'];
+  cardImg.classList.add('profile-image');
   cardDiv.appendChild(cardImg);
 
   const infoDiv = document.createElement('div');
@@ -117,5 +119,12 @@ const cardCreator = cardObj => {
   infoBio.textContent = `Bio: ${cardObj.bio}`;
   infoDiv.appendChild(infoBio);
 
+ // Call createRepoCards
+
   return cardDiv;
 }
+
+ // function that creates the users repo cards
+ const createRepoCards(repoObj => {
+  
+ });
