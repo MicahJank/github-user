@@ -130,12 +130,28 @@ const cardCreator = cardObj => {
   // since repos starts with a hide class on it we need to toggle it on and off when the repo button
   // is clicked so that the repos can be seen
   repoButton.addEventListener('click', () => {
-    repos.classList.toggle('hide');
+    repos.classList.toggle('open');
+    
+    
+    animateButton();
   });
+
+  const animateButton = () => {
+    if (repos.classList.contains('open')) {
+      repoButton.classList.remove('fa-angle-down');
+      repoButton.classList.add('fa-angle-up');
+      TweenMax.set(repos, { height: 'auto' });
+      TweenMax.from(repos, 0.5, { height: '0' });
+    }else {
+      repoButton.classList.remove('fa-angle-up');
+      repoButton.classList.add('fa-angle-down');
+      TweenMax.to(repos, 0.5, { height: '0' });
+    }
+  };
 
   // repos will hold all the repo cards that are created by the createRepoCards function
   const repos = document.createElement('div');
-  repos.classList.add('repos', 'hide');
+  repos.classList.add('repos');
   cardDiv.appendChild(repos);
 
 
