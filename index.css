@@ -103,7 +103,7 @@ body {
 }
 
 .card-info {
-  width: 50%;
+  width: 75%;
   margin-bottom: 30px;
 }
 
@@ -136,6 +136,22 @@ body {
 
 .repos {
 width: 100%;
+display: flex;
+}
+
+.repos .repo {
+  width: 35%;
+  margin: 10px;
+  padding: 10px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+.fa-angle-down {
+  position: relative;
+  bottom: 10%;
+  left: 48%;
+  font-size: 3rem;
+  cursor: pointer;
 }
 
 .hide {

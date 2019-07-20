@@ -119,9 +119,20 @@ const cardCreator = cardObj => {
   infoBio.textContent = `Bio: ${cardObj.bio}`;
   infoDiv.appendChild(infoBio);
 
+  // repoButton will expand the created card to show the repo section
+  const repoButton = document.createElement('i');
+  repoButton.classList.add('fas', 'fa-angle-down');
+  cardDiv.appendChild(repoButton);
+
+  // since repos starts with a hide class on it we need to toggle it on and off when the repo button
+  // is clicked so that the repos can be seen
+  repoButton.addEventListener('click', () => {
+    repos.classList.toggle('hide');
+  });
+
   // repos will hold all the repo cards that are created by the createRepoCards function
   const repos = document.createElement('div');
-  repos.classList.add('repos');
+  repos.classList.add('repos', 'hide');
   cardDiv.appendChild(repos);
 
 
@@ -130,9 +141,12 @@ const cardCreator = cardObj => {
 
   reposPromise
     .then(reposObj => {
-      reposObj.data.forEach(repo => {
-        const repoCard = createRepoCards(repo);
-        repos.appendChild(repoCard);
+      reposObj.data.forEach((repo, i) => {
+        if (i < 3) {
+          const repoCard = createRepoCards(repo);
+          repos.appendChild(repoCard);
+        }
+        
       });
     })
 
