@@ -1,3 +1,6 @@
+// setting up the github calender
+GitHubCalendar(".calendar", "MicahJank", {responsive: true});
+
 
 // myInfo stores the promise from axios.get
 const myInfo = axios.get('https://api.github.com/users/MicahJank');
