@@ -1,34 +1,56 @@
-/* Step 1: using axios, send a GET request to the following URL 
-           (replacing the palceholder with your Github name):
-           https://api.github.com/users/<your name>
-*/
+// setting up the github calender
+GitHubCalendar(".calendar", "MicahJank", {responsive: true});
 
-/* Step 2: Inspect and study the data coming back, this is YOUR 
-   github info! You will need to understand the structure of this 
-   data in order to use it to build your component function 
 
-   Skip to Step 3.
-*/
+// myInfo stores the promise from axios.get
+const myInfo = axios.get('https://api.github.com/users/MicahJank');
 
-/* Step 4: Pass the data received from Github into your function, 
-           create a new component and add it to the DOM as a child of .cards
-*/
+// card container is used to store the component that carCreator creates
+const cardsContainer = document.querySelector('.cards');
+console.log(myInfo);
 
-/* Step 5: Now that you have your own card getting added to the DOM, either 
-          follow this link in your browser https://api.github.com/users/<Your github name>/followers 
-          , manually find some other users' github handles, or use the list found 
-          at the bottom of the page. Get at least 5 different Github usernames and add them as
-          Individual strings to the friendsArray below.
-          
-          Using that array, iterate over it, requesting data for each user, creating a new card for each
-          user, and adding that card to the DOM.
-*/
+// myInfo = the promise
+myInfo
+// was axios was able to retrieve the data from the API? if so then
+  .then(gitHubData => {
+    // in order to show the data on screen i run the cardCreator function which returns an element
+    // that element is then appended to the cardsContainer
+    const userCard = cardCreator(gitHubData.data);
+    cardsContainer.appendChild(userCard);
 
-const followersArray = [];
+    return gitHubData.data['followers_url'];
+  })
 
-/* Step 3: Create a function that accepts a single object as its only argument,
-          Using DOM methods and properties, create a component that will return the following DOM element:
+  .then(followersURL => {
+    const followers = axios.get(followersURL);
 
+    followers
+      .then(followerData => {
+        const followerDataArray = followerData.data; // the array of follower OBJECTS
+
+        const followerUrlArray = followerDataArray.map(follower => { // returns an array of follower URLs
+          return follower.url;
+        });
+
+        return followerUrlArray;
+      })
+      .then(followersUrlArray => {
+        followersUrlArray.forEach(followerURL => {
+         const followerInfoObj = axios.get(followerURL);
+
+         followerInfoObj
+          .then(followerObj => {
+            const followerCard = cardCreator(followerObj.data);
+            cardsContainer.appendChild(followerCard);
+          });
+        });
+      });
+  })
+  .catch(err => {
+    console.log('ERROR: ', err);
+  });
+
+/* 
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
@@ -43,13 +65,148 @@ const followersArray = [];
     <p>Bio: {users bio}</p>
   </div>
 </div>
-
 */
 
-/* List of LS Instructors Github username's: 
-  tetondan
-  dustinmyers
-  justsml
-  luishrd
-  bigknell
-*/
+const cardCreator = cardObj => {
+  const cardDiv = document.createElement('div');
+  cardDiv.classList.add('card');
+
+  const cardImg = document.createElement('img');
+  cardImg.src = cardObj['avatar_url'];
+  cardImg.classList.add('profile-image');
+  cardDiv.appendChild(cardImg);
+
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('card-info');
+  cardDiv.appendChild(infoDiv);
+
+  // persons name p tag
+  const infoName = document.createElement('h3');
+  infoName.classList.add('name');
+  infoName.textContent = cardObj.name;
+  infoDiv.appendChild(infoName);
+
+  // user name p tag
+  const infoUserName = document.createElement('p');
+  infoUserName.classList.add('username');
+  infoUserName.textContent = cardObj.login;
+  infoDiv.appendChild(infoUserName);
+
+  // location p tag
+  const infoLocation = document.createElement('p');
+  infoLocation.textContent = `Location: ${cardObj.location}`;
+  infoDiv.appendChild(infoLocation);
+
+  // profile p tag
+  const infoProfile = document.createElement('p');
+  infoProfile.textContent = 'Profile: ';
+  infoDiv.appendChild(infoProfile);
+  // a link github user address
+  const profileLink = document.createElement('a');
+  profileLink.href = cardObj['html_url'];
+  profileLink.textContent = cardObj['html_url'];
+  infoProfile.appendChild(profileLink);
+
+  // followers p tag
+  const infoFollowers = document.createElement('p');
+  infoFollowers.textContent = `Followers: ${cardObj.followers}`;
+  infoDiv.appendChild(infoFollowers);
+
+  // following p tag
+  const infoFollowing = document.createElement('p');
+  infoFollowing.textContent = `Following: ${cardObj.following}`;
+  infoDiv.appendChild(infoFollowing);
+
+  // bio p tag
+  const infoBio = document.createElement('p');
+  infoBio.textContent = `Bio: ${cardObj.bio}`;
+  infoDiv.appendChild(infoBio);
+
+  // repoButton will expand the created card to show the repo section
+  const repoButton = document.createElement('i');
+  repoButton.classList.add('fas', 'fa-angle-down');
+  cardDiv.appendChild(repoButton);
+
+  // since repos starts with a hide class on it we need to toggle it on and off when the repo button
+  // is clicked so that the repos can be seen
+  repoButton.addEventListener('click', () => {
+    repos.classList.toggle('open');
+    
+    
+    animateButton();
+  });
+
+  const animateButton = () => {
+    if (repos.classList.contains('open')) {
+      repoButton.classList.remove('fa-angle-down');
+      repoButton.classList.add('fa-angle-up');
+      TweenMax.set(repos, { height: 'auto' });
+      TweenMax.from(repos, 0.5, { height: '0' });
+    }else {
+      repoButton.classList.remove('fa-angle-up');
+      repoButton.classList.add('fa-angle-down');
+      TweenMax.to(repos, 0.5, { height: '0' });
+    }
+  };
+
+  // repos will hold all the repo cards that are created by the createRepoCards function
+  const repos = document.createElement('div');
+  repos.classList.add('repos');
+  cardDiv.appendChild(repos);
+
+
+  // use axios.get to return a promise of the repos_url
+  const reposPromise = axios.get(cardObj.repos_url);
+
+  reposPromise
+    .then(reposObj => {
+      reposObj.data.forEach((repo, i) => {
+        if (i < 3) {
+          const repoCard = createRepoCards(repo);
+          repos.appendChild(repoCard);
+        }
+        
+      });
+    })
+
+    .catch(err => {
+      console.log('ERROR: ', err);
+    });
+
+  // call the createRepoCards here so that we can attach the created repo cards to the current github profile card that
+  // is being created
+
+
+  return cardDiv;
+};
+
+// function that creates the users repo cards
+const createRepoCards = (repoObj => {
+  // card structure
+  /*
+    <div class="repo">
+      <p></p>
+      <p></p>
+      <a class="button" href=""></a>
+    </div>
+  */
+
+  const repoDiv = document.createElement('div');
+  repoDiv.classList.add('repo');
+
+  const repoName = document.createElement('p');
+  repoName.textContent = repoObj.name;
+  repoDiv.appendChild(repoName);
+
+  const repoDescription = document.createElement('p');
+  repoDescription.textContent = repoObj.description;
+  repoDiv.appendChild(repoDescription);
+
+  const repoLink = document.createElement('a');
+  repoLink.classList.add('button');
+  repoLink.href = repoObj.html_url;
+  repoLink.textContent = 'Go to Repo';
+  repoDiv.appendChild(repoLink);
+
+  return repoDiv;
+});
